@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CatatUang - XI DKV 2</title>
+    <!-- Google Fonts & Tailwind CSS CDN untuk styling cepat & rapi -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navigasi -->
+    <header class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-2">
+                <span class="bg-indigo-500 p-2 rounded-lg text-xl">🎨</span>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">CatatUang XI DKV 2</h1>
+                    <p class="text-xs text-indigo-200">Transparansi Keuangan Kelas Kreatif</p>
+                </div>
+            </div>
+            <div class="bg-indigo-700 px-3 py-1.5 rounded-full text-xs font-medium border border-indigo-500">
+                Status: <span id="statusKelas" class="text-emerald-300 font-bold">Aman</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="max-w-5xl mx-auto px-4 py-8 w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Sisi Kiri: Ringkasan & Form Input (1 Kolom di Desktop) -->
+        <div class="md:col-span-1 space-y-6">
+            
+            <!-- Ringkasan Saldo -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Ringkasan Kas</h2>
+                
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                    <p class="text-xs text-indigo-600 font-medium">Total Saldo Kas</p>
+                    <h3 id="saldoTotal" class="text-2xl font-extrabold text-indigo-900 mt-1">Rp 0</h3>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                        <p class="text-[11px] text-emerald-600 font-medium">Pemasukan</p>
+                        <p id="totalPemasukan" class="text-sm font-bold text-emerald-900 mt-0.5">Rp 0</p>
+                    </div>
+                    <div class="bg-rose-50 p-3 rounded-xl border border-rose-100">
+                        <p class="text-[11px] text-rose-600 font-medium">Pengeluaran</p>
+                        <p id="totalPengeluaran" class="text-sm font-bold text-rose-900 mt-0.5">Rp 0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Tambah Transaksi -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-md font-bold text-slate-700 mb-4 flex items-center gap-2">
+                    <span>➕</span> Tambah Transaksi
+                </h2>
+                <form id="formTransaksi" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Tanggal</label>
+                        <input type="date" id="tanggal" required class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Tipe Transaksi</label>
+                        <select id="tipe" class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="pemasukan">Pemasukan (Masuk)</option>
+                            <option value="pengeluaran">Pengeluaran (Keluar)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Kategori</label>
+                        <input type="text" id="kategori" placeholder="Contoh: Kas Mingguan / Beli Tinta" required class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Nama Siswa / Keterangan Pihak</label>
+                        <input type="text" id="nama" placeholder="Contoh: Budi (Absen 05) atau Toko Printer" required class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Nominal (Rp)</label>
+                        <input type="number" id="jumlah" placeholder="Contoh: 5000" min="1" required class="w-full text-sm px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-lg text-sm transition duration-200 shadow-sm shadow-indigo-200">
+                        Simpan Transaksi
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Sisi Kanan: Tabel Riwayat Mutasi (2 Kolom di Desktop) -->
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-md font-bold text-slate-700">📜 Riwayat Kas XI DKV 2</h2>
+                    <button onclick="resetData()" class="text-xs text-rose-500 hover:text-rose-700 font-medium underline">Reset Data</button>
+                </div>
+
+                <!-- Wrapper Tabel agar Responsif -->
+                <div class="overflow-x-auto flex-grow">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 text-[11px] text-slate-400 uppercase tracking-wider">
+                                <th class="pb-3 font-semibold">Tanggal</th>
+                                <th class="pb-3 font-semibold">Kategori / Keterangan</th>
+                                <th class="pb-3 font-semibold">Siswa / Sumber</th>
+                                <th class="pb-3 font-semibold text-right">Nominal</th>
+                                <th class="pb-3 font-semibold text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelMutasi" class="divide-y divide-slate-50 text-sm">
+                            <!-- Data akan dimasukkan lewat JavaScript -->
+                            <tr>
+                                <td colspan="5" class="text-center py-8 text-slate-400 text-xs">Belum ada data transaksi tercatat.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400 mt-12">
+        <p>Dibuat dengan ❤️ oleh Siswa XI DKV 2 | Powered by HTML, Tailwind CSS & JavaScript (GitHub Pages)</p>
+    </footer>
+
+    <!-- JavaScript Logika & LocalStorage -->
+    <script>
+        // Ambil data dari localStorage atau buat array kosong jika belum ada
+        let dataKeuangan = JSON.parse(localStorage.getItem('kas_xidkv2')) || [];
+
+        // Set default tanggal hari ini pada form input
+        document.getElementById('tanggal').valueAsDate = new Date();
+
+        // Fungsi Format Mata uang Rupiah
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        // Fungsi Render / Perbarui Tampilan UI
+        function renderAplikasi() {
+            const tabelBody = document.getElementById('tabelMutasi');
+            tabelBody.innerHTML = '';
+
+            let totalMasuk = 0;
+            let totalKeluar = 0;
+
+            if (dataKeuangan.length === 0) {
+                tabelBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 text-xs">Belum ada data transaksi tercatat.</td></tr>`;
+            } else {
+                dataKeuangan.forEach((item, index) => {
+                    if (item.tipe === 'pemasukan') {
+                        totalMasuk += Number(item.jumlah);
+                    } else {
+                        totalKeluar += Number(item.jumlah);
+                    }
+
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-slate-50/50 transition";
+                    row.innerHTML = `
+                        <td class="py-3 text-xs text-slate-500">${item.tanggal}</td>
+                        <td class="py-3">
+                            <span class="block font-medium text-slate-700">${item.kategori}</span>
+                        </td>
+                        <td class="py-3 text-xs text-slate-600">${item.nama}</td>
+                        <td class="py-3 text-right font-semibold ${item.tipe === 'pemasukan' ? 'text-emerald-600' : 'text-rose-600'}">
+                            ${item.tipe === 'pemasukan' ? '+' : '-'} ${formatRupiah(item.jumlah)}
+                        </td>
+                        <td class="py-3 text-center">
+                            <button onclick="hapusTransaksi(${index})" class="text-slate-300 hover:text-rose-500 transition text-xs font-bold p-1" title="Hapus">✕</button>
+                        </td>
+                    `;
+                    tabelBody.appendChild(row);
+                });
+            }
+
+            let saldoAkhir = totalMasuk - totalKeluar;
+
+            // Update Card Ringkasan
+            document.getElementById('saldoTotal').innerText = formatRupiah(saldoAkhir);
+            document.getElementById('totalPemasukan').innerText = formatRupiah(totalMasuk);
+            document.getElementById('totalPengeluaran').innerText = formatRupiah(totalKeluar);
+
+            // Simpan ke LocalStorage
+            localStorage.setItem('kas_xidkv2', JSON.stringify(dataKeuangan));
+        }
+
+        // Event Listener saat Form Disubmit
+        document.getElementById('formTransaksi').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const tanggal = document.getElementById('tanggal').value;
+            const tipe = document.getElementById('tipe').value;
+            const kategori = document.getElementById('kategori').value;
+            const nama = document.getElementById('nama').value;
+            const jumlah = document.getElementById('jumlah').value;
+
+            const transaksiBaru = {
+                tanggal,
+                tipe,
+                kategori,
+                nama,
+                jumlah: Number(jumlah)
+            };
+
+            dataKeuangan.unshift(transaksiBaru); // Masukkan data baru ke urutan paling atas
+            renderAplikasi();
+
+            // Reset form input teks & nominal saja
+            document.getElementById('kategori').value = '';
+            document.getElementById('nama').value = '';
+            document.getElementById('jumlah').value = '';
+        });
+
+        // Fungsi Hapus Transaksi Berdasarkan Index
+        function hapusTransaksi(index) {
+            if (confirm("Apakah Anda yakin ingin menghapus catatan transaksi ini?")) {
+                dataKeuangan.splice(index, 1);
+                renderAplikasi();
+            }
+        }
+
+        // Fungsi Reset Seluruh Data
+        function resetData() {
+            if (confirm("PERINGATAN: Semua data keuangan kelas akan dihapus permanen! Lanjutkan?")) {
+                dataKeuangan = [];
+                localStorage.removeItem('kas_xidkv2');
+                renderAplikasi();
+            }
+        }
+
+        // Jalankan render saat halaman pertama kali dimuat
+        renderAplikasi();
+    </script>
+</body>
+</html>
